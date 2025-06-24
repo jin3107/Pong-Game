@@ -1,8 +1,8 @@
 const canvas = document.getElementById('pong');
 const ctx = canvas.getContext('2d');
 
-const WIDTH = canvas.width;
-const HEIGHT = canvas.height;
+let WIDTH = canvas.width;
+let HEIGHT = canvas.height;
 
 const PADDLE_WIDTH = 12;
 const PADDLE_HEIGHT = 80;
@@ -206,6 +206,37 @@ function gameLoop() {
   }
 }
 
+function resizeCanvas() {
+  let w = window.innerWidth;
+  let h = window.innerHeight;
+  if (w / h > 16 / 9) {
+    w = h * 16 / 9;
+  } else {
+    h = w * 9 / 16;
+  }
+  canvas.width = w * 0.98;
+  canvas.height = h * 0.7;
+  updateConstants();
+  resetBall();
+}
+function updateConstants() {
+  WIDTH = canvas.width;
+  HEIGHT = canvas.height;
+  player.y = HEIGHT / 2 - player.height / 2;
+  ai.x = WIDTH - ai.width - PADDLE_MARGIN;
+  ai.y = HEIGHT / 2 - ai.height / 2;
+}
+
+canvas.addEventListener('touchmove', function (e) {
+  if (gameOver) return;
+  const rect = canvas.getBoundingClientRect();
+  const touch = e.touches[0];
+  const touchY = touch.clientY - rect.top;
+  player.y = touchY - player.height / 2;
+  player.y = Math.max(0, Math.min(HEIGHT - player.height, player.y));
+  e.preventDefault();
+}, { passive: false });
+
 canvas.addEventListener('mousemove', function (e) {
   if (gameOver) return;
   const rect = canvas.getBoundingClientRect();
@@ -221,6 +252,10 @@ canvas.addEventListener('click', function () {
     resetGame();
   }
 });
+
+window.addEventListener('resize', resizeCanvas);
+
+resizeCanvas();
 
 resetBall();
 gameLoop();
