@@ -154,7 +154,7 @@ function update() {
       startFlash();
       return;
     }
-    resetBall(direction == 1);
+    resetBall(direction = 1);
   }
   if (ball.x + ball.size > WIDTH) {
     playerScore++;
@@ -164,7 +164,7 @@ function update() {
       startFlash();
       return;
     }
-    resetBall(direction == -1);
+    resetBall(direction = -1);
   }
 
   if (ball.y + ball.size / 2 < ai.y + ai.height / 2) {
